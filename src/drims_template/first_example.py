@@ -1,18 +1,14 @@
 #! /usr/bin/env python3
 
-from __future__ import print_function
-
-import sys
 import rospy
-from abb_wrapper_msgs.srv import *
+from abb_wrapper_msgs.srv import plan_and_execute_pose as PlanAndExecutePose
+from geometry_msgs.msg import Pose, Position, Orientation
 
-SERVICE_NAME = "/move_to_cartesian"
+SERVICE_NAME = "/plan_and_execute_pose"
 
-def add_two_ints_client(x, y):
-    rospy.wait_for_service('add_two_ints')
+# def move_to_pose(x, y):
     try:
-        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
-        resp1 = add_two_ints(x, y)
+        resp1 = move_to_pose_srv(x)
         return resp1.sum
     except rospy.ServiceException as e:
         print("Service call failed: %s" % e)
@@ -23,6 +19,13 @@ def usage():
 
 
 if __name__ == "__main__":
+    rospy.wait_for_service(SERVICE_NAME)
+    move_to_pose_srv = rospy.ServiceProxy(SERVICE_NAME, PlanAndExecutePose)
+
+    goal_pose = Pose()
+    goal_pose.
+
+
     if len(sys.argv) == 3:
         x = int(sys.argv[1])
         y = int(sys.argv[2])
