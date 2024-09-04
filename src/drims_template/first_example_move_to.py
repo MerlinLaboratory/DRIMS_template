@@ -23,8 +23,12 @@ def main():
 
     is_relative = False
 
+    srv_request = plan_end_execute_poseRequest()
+    srv_request.goal_pose = goal_pose
+    srv_request.is_relative = is_relative
+    
     try:
-        response = plan_end_execute_poseRequest(goal_pose=goal_pose, is_relative=is_relative)
+        response = plan_and_execute_pose(srv_request)
     except rospy.ServiceException as e:
         rospy.logerr(f'Service call failed: {e}')
                 
