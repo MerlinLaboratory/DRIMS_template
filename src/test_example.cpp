@@ -4,6 +4,7 @@
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "std_msgs/Int16.h"
+#include "std_msgs/Float64.h"
 #include "Eigen/Dense"
 #include <eigen_conversions/eigen_msg.h>
 
@@ -35,7 +36,7 @@ int counter = 0;
 bool gripper = true;
 bool success = false;
 bool exit_flag = false;
-std::vector<double> initial_joint{0.6958229344666362, -0.832986721504323, 0.7529323343354806, 1.1712760581288713, 0.3368141414588006, 1.0205815676983665, 1.1097106282881333};
+std::vector<double> home_joint{0.6958229344666362, -0.832986721504323, 0.7529323343354806, 1.1712760581288713, 0.3368141414588006, 1.0205815676983665, 1.1097106282881333};
 
 //
 void dicevalueCallback(const std_msgs::Int16::ConstPtr &msg)
@@ -125,17 +126,77 @@ int main(int argc, char **argv)
 
    // Define ROS clients for calling the 5 ROS Services: PlanAndExcutePose, PlanAndExecuteJoint, PlanAndExecuteSlerp, Open and Close Gripper
    if (!ros::service::waitForService("/plan_and_execute_pose", ros::Duration(2.0)))
-        return 0;
+      return 0;
    plan_and_execute_pose_client = nh_.serviceClient<abb_wrapper_msgs::plan_and_execute_pose>("/plan_and_execute_pose");
-   
+
+   if (!ros::service::waitForService("/plan_and_execute_joint", ros::Duration(2.0)))
+      return 0;
+   plan_and_execute_joint_client = nh_.serviceClient<abb_wrapper_msgs::plan_and_execute_joint>("/plan_and_execute_joint");
+
    // ROS Async spinner (necessary for processing callbacks inside the service callbacks)
    ros::AsyncSpinner spinner(2);
    spinner.start();
 
    ROS_INFO("At the beginning of the task");
-   
+
    /* Create a simple grasp task for grasping the dice*/
-   
+
+   /*GO HOME JOINT POSITION*/
+   // initialize joint request
+
+   std::vector<double> home_joints{1.58, -1.26, 0.76, 0.0, 1.81, 0.10};
+   abb_wrapper_msgs::plan_and_execute_joint plan_and_execute_joint_srv;
+   plan_and_execute_joint_srv.request.joint_goal = home_joints;
+
+   if (!plan_and_execute_joint_client.call(plan_and_execute_joint_srv))
+   {
+      ROS_ERROR("Failed to call the plan_and_execute_joint ROS Service");
+   }
+   else
+   {
+      ROS_INFO("Call the plan_and_execute_joint ROS Service");
+   }
+
+   /* GO TO PRE GRASP */
+   // initialize Pose Goal
+
+   ros::spinOnce();
+   ROS_INFO("The grasp_dice_pose is: %f, %f, %f, %f, %f, %f, %f",
+            grasp_dice_pose.position.x,
+            grasp_dice_pose.position.y,
+            grasp_dice_pose.position.z,
+            grasp_dice_pose.orientation.x,
+            grasp_dice_pose.orientation.y,
+            grasp_dice_pose.orientation.z,
+            grasp_dice_pose.orientation.w);
+
+   // Rotate the grasp pose dice coming from topic
+   geometry_msgs::Pose rotated_grasp_pose = applyRotationOffset(grasp_dice_pose, -45.0, Eigen::Vector3d::UnitX());
+
+   ROS_INFO("The rotated grasp pose is: %f, %f, %f, %f, %f, %f, %f",
+            rotated_grasp_pose.position.x,
+            rotated_grasp_pose.position.y,
+            rotated_grasp_pose.position.z,
+            rotated_grasp_pose.orientation.x,
+            rotated_grasp_pose.orientation.y,
+            rotated_grasp_pose.orientation.z,
+            rotated_grasp_pose.orientation.w);
+
+   // Add the displacement along z-axis of the rotated grasp pose: 8 cm above the grasp_rotated_dice
+   geometry_msgs::Pose pre_grasp_pose = applyDisplacementOffset(rotated_grasp_pose, Eigen::Vector3d(0.0, 0.0, -0.08));
+
+   abb_wrapper_msgs::plan_and_execute_pose plan_and_execute_pose_srv;
+   plan_and_execute_pose_srv.request.goal_pose = pre_grasp_pose;
+   plan_and_execute_pose_srv.request.is_relative = false;
+
+   if (!plan_and_execute_pose_client.call(plan_and_execute_pose_srv))
+   {
+      ROS_ERROR("Failed to call the plan_and_execute_pose ROS Service");
+   }
+   else
+   {
+      ROS_INFO("Call the plan_and_execute_pose ROS Service");
+   }
 
    ros::waitForShutdown();
    spinner.stop();
