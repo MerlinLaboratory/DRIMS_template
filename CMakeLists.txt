@@ -155,8 +155,8 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-add_executable(test_example src/test_example.cpp)
-target_link_libraries(test_example ${catkin_LIBRARIES})
+#add_executable(test_example src/test_example.cpp)
+#target_link_libraries(test_example ${catkin_LIBRARIES})
 
 #############
 ## Install ##
