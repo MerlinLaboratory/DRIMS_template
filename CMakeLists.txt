@@ -9,9 +9,13 @@ project(drims_template)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  roscpp
   std_msgs
   std_srvs
   abb_wrapper_msgs
+  tf
+  tf_conversions
+  eigen_conversions
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,8 +109,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES drims_template
-#  CATKIN_DEPENDS rospy std_msgs std_srvs
+ LIBRARIES drims_template
+ CATKIN_DEPENDS rospy std_msgs std_srvs roscpp
 #  DEPENDS system_lib
 )
 
@@ -119,6 +123,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  /usr/include/eigen3
 )
 
 ## Declare a C++ library
@@ -150,6 +155,8 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+add_executable(test_example src/test_example.cpp)
+target_link_libraries(test_example ${catkin_LIBRARIES})
 
 #############
 ## Install ##
