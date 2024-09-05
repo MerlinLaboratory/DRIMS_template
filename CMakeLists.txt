@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   tf_conversions
   eigen_conversions
+  abb_wrapper_control
 )
 
 ## System dependencies are found with CMake's conventions
@@ -157,6 +158,9 @@ include_directories(
 # )
 add_executable(test_example src/test_example.cpp)
 target_link_libraries(test_example ${catkin_LIBRARIES})
+
+add_executable(task_dice src/task_dice.cpp)
+target_link_libraries(task_dice ${catkin_LIBRARIES})
 
 #############
 ## Install ##

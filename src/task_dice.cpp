@@ -104,7 +104,7 @@ ROS NODE MAIN TASK SEQUENCE SERVER
 **********************************************/
 int main(int argc, char **argv)
 {
-   ros::init(argc, argv, "test_example");
+   ros::init(argc, argv, "task_dice");
 
    ros::NodeHandle nh_;
 
@@ -152,32 +152,15 @@ int main(int argc, char **argv)
    ROS_INFO("At the beginning of the task");
 
    /* GRASP DICE TASK*/
-
-   //
-   ros::spinOnce();
-
-   // Add the displacement along z-axis of the grasp_dice_pose: 6 cm above the grasp_dice_pose
-   geometry_msgs::Pose pre_grasp_pose = applyDisplacementOffset(grasp_dice_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
    
-   // Approach to pre_grasp_pose
-   bool success = call_plan_and_execute_pose(pre_grasp_pose, false);
-   
-   // Go into Grasp Pose
-   success = call_plan_and_execute_slerp(grasp_dice_pose, false);
-   
-   // Close the gripper
-   success = call_close_gripper(true);
-   
-   // Relative offset of 6 cm in order to plan from the current state of the robot
-   geometry_msgs::Pose empty_pose;
-   geometry_msgs::Pose displacement_pose = applyDisplacementOffset(empty_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
-
-   // Set true to plan w.r.t a relative offset
-   success = call_plan_and_execute_slerp(displacement_pose, true);
-
-   // Open Gripper
-
-   success = call_open_gripper(true);
+   /*Create your own task to grasp the dice by using the function: 
+    _ call_plan_and_execute_pose
+    _call_plan_and_execute_slerp
+    _call_plan_and_execute_joint
+    _call_open_gripper
+    _call_close_gripper
+     reported from lined 170 to 242
+    */
 
    ros::waitForShutdown();
    spinner.stop();
