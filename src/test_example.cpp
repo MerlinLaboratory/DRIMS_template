@@ -159,8 +159,10 @@ int main(int argc, char **argv)
    // Add the displacement along z-axis of the grasp_dice_pose: 6 cm above the grasp_dice_pose
    geometry_msgs::Pose pre_grasp_pose = applyDisplacementOffset(grasp_dice_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
    
+   // open Gripper
+   bool success = call_open_gripper(true);
    // Approach to pre_grasp_pose
-   bool success = call_plan_and_execute_pose(pre_grasp_pose, false);
+   success = call_plan_and_execute_pose(pre_grasp_pose, false);
    
    // Go into Grasp Pose
    success = call_plan_and_execute_slerp(grasp_dice_pose, false);
