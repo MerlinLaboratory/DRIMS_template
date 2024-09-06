@@ -4,23 +4,22 @@
 
 In order to run the simulation:
 
-1. Load robot controllers
-```bash
-roslaunch abb_wrapper_control launchControlServer.launch
-```
-
-2. Load task server
-```bash
-roslaunch abb_wrapper_control launchTaskServer.launch
-```
-
-3. Load Gazebo environment
+1. Load Gazebo environment and robot simulation:
 ```bash
 roslaunch drims_dice_demo arm_gazebo.launch robot:=yumi # or robot:=gofa
 ```
 
+2. Launch low level ROS Services Server for robot planning and control:
+```bash
+roslaunch abb_wrapper_control launchControlServer.launch
+```
 
-4. Load dice
+3. Launch high level ROS Services Server for robot planning and control:
+```bash
+roslaunch abb_wrapper_control launchTaskServer.launch
+```
+
+4. Spawn the dice in simulation:
 ```bash
 roslaunch drims_dice_demo spawn_dice.launch
 ```
