@@ -49,7 +49,7 @@ Both of the example programs present a basic use of the services to move the rob
 - `/open_gripper`: open the gripper.
 - `/close_gripper`: close the gripper.
 
-In the following description are repored the ROS service definition, located in the `abb_wrapper_msgs` folder:
+In the following description are reported the ROS service definition, located in the `abb_wrapper_msgs` folder:
 
 **Service structure `abb_wrapper_msgs/plan_and_execute_pose`**
 ```
