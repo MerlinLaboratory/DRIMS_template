@@ -33,18 +33,20 @@ def plan_and_execute_joint(joint_goal):
 
     srv_request = PlanAndExecuteJointRequest()
     srv_request.joint_goal = joint_goal
-    
-    try:
-        response = plan_and_execute_joint(srv_request)
-    except rospy.ServiceException as e:
-        rospy.logerr(f'Service call failed: {e}')
-                
-    if response.success:
-        rospy.loginfo(f'Success, msg content: {response.message}')
-    else:
-        rospy.logwarn(f'Failed, msg content: {response.message}')
 
-    return response.success
+    return plan_and_execute_joint(srv_request)
+    
+    # try:
+    #     response = plan_and_execute_joint(srv_request)
+    # except rospy.ServiceException as e:
+    #     rospy.logerr(f'Service call failed: {e}')
+                
+    # if response.success:
+    #     rospy.loginfo(f'Success, msg content: {response.message}')
+    # else:
+    #     rospy.logwarn(f'Failed, msg content: {response.message}')
+
+    # return response.success
 
 def plan_and_execute_pose(goal_pose, is_relative):
     rospy.loginfo(f'PLAN AND EXECUTE TO A CARTESIAN POSE WITH JOINT TRAJECTORY. IS A RELATIVE MOVE: {is_relative}')
@@ -57,19 +59,21 @@ def plan_and_execute_pose(goal_pose, is_relative):
     srv_request = PlanAndExecutePoseRequest()
     srv_request.goal_pose = goal_pose
     srv_request.is_relative = is_relative
+
+    return plan_and_execute_pose_client(srv_request)
     
-    try:
-        # Call service
-        response = plan_and_execute_pose_client(srv_request)
-    except rospy.ServiceException as e:
-        rospy.logerr(f'Service call failed: {e}')
+    # try:
+    #     # Call service
+    #     response = plan_and_execute_pose_client(srv_request)
+    # except rospy.ServiceException as e:
+    #     rospy.logerr(f'Service call failed: {e}')
                 
-    if response.success:
-        rospy.loginfo(f'Success, msg content: {response.message}')
-    else:
-        rospy.logwarn(f'Failed, msg content: {response.message}')    
+    # if response.success:
+    #     rospy.loginfo(f'Success, msg content: {response.message}')
+    # else:
+    #     rospy.logwarn(f'Failed, msg content: {response.message}')    
     
-    return response.success
+    # return response.success
 
 
 def plan_and_execute_slerp(goal_pose, is_relative):
@@ -80,18 +84,21 @@ def plan_and_execute_slerp(goal_pose, is_relative):
     srv_request = PlanAndExecuteSlerpRequest()
     srv_request.goal_pose = goal_pose
     srv_request.is_relative = is_relative
-    
-    try:
-        response = plan_and_execute_slerp(srv_request)
-    except rospy.ServiceException as e:
-        rospy.logerr(f'Service call failed: {e}')
-                
-    if response.success:
-        rospy.loginfo(f'Success, msg content: {response.message}')
-    else:
-        rospy.logwarn(f'Failed, msg content: {response.message}')  
 
-    return response.success
+
+    return plan_and_execute_slerp(srv_request)
+    
+    # try:
+    #     response = plan_and_execute_slerp(srv_request)
+    # except rospy.ServiceException as e:
+    #     rospy.logerr(f'Service call failed: {e}')
+                
+    # if response.success:
+    #     rospy.loginfo(f'Success, msg content: {response.message}')
+    # else:
+    #     rospy.logwarn(f'Failed, msg content: {response.message}')  
+
+    # return response.success
 
 
 def open_gripper():
@@ -102,10 +109,12 @@ def open_gripper():
     srv_request = OpenGripperRequest()
     srv_request.in_flag = True
 
-    try:
-        response = open_gripper(srv_request)
-    except rospy.ServiceException as e:
-        rospy.logerr(f'Service call failed: {e}')
+    return open_gripper(srv_request)
+
+    # try:
+    #     response = open_gripper(srv_request)
+    # except rospy.ServiceException as e:
+    #     rospy.logerr(f'Service call failed: {e}')
 
 def close_gripper():
     rospy.loginfo(f'CLOSE GRIPPER')
@@ -115,10 +124,12 @@ def close_gripper():
     srv_request = CloseGripperRequest()
     srv_request.in_flag = True
 
-    try:
-        response = close_gripper(srv_request)
-    except rospy.ServiceException as e:
-        rospy.logerr(f'Service call failed: {e}')
+    return close_gripper(srv_request)
+
+    # try:
+    #     response = close_gripper(srv_request)
+    # except rospy.ServiceException as e:
+    #     rospy.logerr(f'Service call failed: {e}')
 
 def wait_for_dice_pose():
     dice_pose = rospy.wait_for_message(DICE_POSE_TOPIC, PoseStamped, timeout=None)
@@ -138,6 +149,8 @@ def main():
     goal_joints.append(-1.30) # Joint 6
     plan_and_execute_joint(goal_joints)
 
+    rospy.sleep(2)
+
     rospy.loginfo('Waiting for the dice pose...')
     dice_pose = wait_for_dice_pose()
     
@@ -146,6 +159,8 @@ def main():
     approach_pose.position.z = approach_pose.position.z+0.3 #30 centimeters above the dice
     plan_and_execute_pose(approach_pose, False)
 
+    rospy.sleep(2)
+
     rospy.loginfo('Opening gripper...')
     open_gripper()
 
@@ -153,6 +168,8 @@ def main():
     down_pose = Pose()
     down_pose.position.z = 0.30 
     plan_and_execute_slerp(down_pose, True)
+
+    rospy.sleep(2)
 
     rospy.loginfo('Closing gripper...')
     close_gripper()
@@ -173,6 +190,8 @@ def main():
 
     rospy.loginfo('Opening gripper...')
     open_gripper()
+
+    rospy.sleep(2)
 
     rospy.loginfo('Going up...')
     up_pose = Pose()
