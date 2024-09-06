@@ -173,9 +173,7 @@ target_link_libraries(task_dice ${catkin_LIBRARIES})
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-  #  src/drims_template/first_example_move_to.py
    src/drims_template/take_the_dice_example.py
-  #  src/drims_template/move_to_param.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
