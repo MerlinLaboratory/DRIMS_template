@@ -192,6 +192,12 @@ int main(int argc, char **argv)
 
    success = call_open_gripper(true);
 
+   // Rotate along X-axis of grasp link frame
+   geometry_msgs::Pose rotation_pose = applyRotationOffset(empty_pose, -30.0, Eigen::Vector3d::UnitX());
+   
+   //
+   success = call_plan_and_execute_pose(rotation_pose, true);
+   
    ros::waitForShutdown();
    spinner.stop();
    return 0;
