@@ -41,6 +41,9 @@ Instead, for the **C++** version:
 ```bash
 roslaunch drims_template test_example.launch
 ```
+This launcher runs the script "test_example.cpp" located in the `DRIMS_template` ROS package.
+
+ATTENTION: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
 
 Both of the example programs present a basic use of the services to move the robot:
 - `/plan_and_execute_pose`: plan a collision-free joint trajectory to a given goal Cartesian pose and execute it.
