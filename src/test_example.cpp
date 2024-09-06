@@ -174,6 +174,7 @@ int main(int argc, char **argv)
    bool success = call_open_gripper(true);
    // Approach to pre_grasp_pose
    success = call_plan_and_execute_pose(pre_grasp_pose, false);
+   //
 
    // Go into Grasp Pose
    success = call_plan_and_execute_slerp(grasp_dice_pose, false);
@@ -185,6 +186,7 @@ int main(int argc, char **argv)
    geometry_msgs::Pose empty_pose;
    geometry_msgs::Pose displacement_pose = applyDisplacementOffset(empty_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
 
+
    // Set true to plan w.r.t a relative offset
    success = call_plan_and_execute_slerp(displacement_pose, true);
 
@@ -194,10 +196,11 @@ int main(int argc, char **argv)
 
    // Rotate along X-axis of grasp link frame
    geometry_msgs::Pose rotation_pose = applyRotationOffset(empty_pose, -30.0, Eigen::Vector3d::UnitX());
-   
+
    //
+
    success = call_plan_and_execute_pose(rotation_pose, true);
-   
+
    ros::waitForShutdown();
    spinner.stop();
    return 0;
