@@ -29,24 +29,17 @@ CLOSE_GRIPPER_SERVICE_NAME          = '/close_gripper'
 def plan_and_execute_joint(joint_goal):
     rospy.loginfo(f'PLAN AND EXECUTE TO A JOINT CONFIGURATION')
     rospy.wait_for_service(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME)
-    plan_and_execute_join_client = rospy.ServiceProxy(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME, PlanAndExecuteJoint)
+    plan_and_execute_joint_client = rospy.ServiceProxy(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME, PlanAndExecuteJoint)
 
     srv_request = PlanAndExecuteJointRequest()
     srv_request.joint_goal = joint_goal
 
-    return plan_and_execute_join_client(srv_request)
+    try:
+        plan_and_execute_joint_client(srv_request)
+    except rospy.ServiceException as e:
+        rospy.logerr(f'Service call failed: {e}')
     
-    # try:
-    #     response = plan_and_execute_joint(srv_request)
-    # except rospy.ServiceException as e:
-    #     rospy.logerr(f'Service call failed: {e}')
-                
-    # if response.success:
-    #     rospy.loginfo(f'Success, msg content: {response.message}')
-    # else:
-    #     rospy.logwarn(f'Failed, msg content: {response.message}')
-
-    # return response.success
+    return
 
 def plan_and_execute_pose(goal_pose, is_relative):
     rospy.loginfo(f'PLAN AND EXECUTE TO A CARTESIAN POSE WITH JOINT TRAJECTORY. IS A RELATIVE MOVE: {is_relative}')
@@ -60,20 +53,12 @@ def plan_and_execute_pose(goal_pose, is_relative):
     srv_request.goal_pose = goal_pose
     srv_request.is_relative = is_relative
 
-    return plan_and_execute_pose_client(srv_request)
+    try:
+        plan_and_execute_pose_client(srv_request)
+    except rospy.ServiceException as e:
+        rospy.logerr(f'Service call failed: {e}')
     
-    # try:
-    #     # Call service
-    #     response = plan_and_execute_pose_client(srv_request)
-    # except rospy.ServiceException as e:
-    #     rospy.logerr(f'Service call failed: {e}')
-                
-    # if response.success:
-    #     rospy.loginfo(f'Success, msg content: {response.message}')
-    # else:
-    #     rospy.logwarn(f'Failed, msg content: {response.message}')    
-    
-    # return response.success
+    return
 
 
 def plan_and_execute_slerp(goal_pose, is_relative):
@@ -84,21 +69,13 @@ def plan_and_execute_slerp(goal_pose, is_relative):
     srv_request = PlanAndExecuteSlerpRequest()
     srv_request.goal_pose = goal_pose
     srv_request.is_relative = is_relative
-
-
-    return plan_and_execute_slerp_client(srv_request)
     
-    # try:
-    #     response = plan_and_execute_slerp(srv_request)
-    # except rospy.ServiceException as e:
-    #     rospy.logerr(f'Service call failed: {e}')
-                
-    # if response.success:
-    #     rospy.loginfo(f'Success, msg content: {response.message}')
-    # else:
-    #     rospy.logwarn(f'Failed, msg content: {response.message}')  
-
-    # return response.success
+    try:
+        plan_and_execute_slerp_client(srv_request)
+    except rospy.ServiceException as e:
+        rospy.logerr(f'Service call failed: {e}')
+    
+    return
 
 
 def open_gripper():
@@ -109,12 +86,10 @@ def open_gripper():
     srv_request = OpenGripperRequest()
     srv_request.in_flag = True
 
-    return open_gripper_client(srv_request)
-
-    # try:
-    #     response = open_gripper(srv_request)
-    # except rospy.ServiceException as e:
-    #     rospy.logerr(f'Service call failed: {e}')
+    try:
+        response = open_gripper_client(srv_request)
+    except rospy.ServiceException as e:
+        rospy.logerr(f'Service call failed: {e}')
 
 def close_gripper():
     rospy.loginfo(f'CLOSE GRIPPER')
@@ -124,12 +99,10 @@ def close_gripper():
     srv_request = CloseGripperRequest()
     srv_request.in_flag = True
 
-    return close_gripper_client(srv_request)
-
-    # try:
-    #     response = close_gripper(srv_request)
-    # except rospy.ServiceException as e:
-    #     rospy.logerr(f'Service call failed: {e}')
+    try:
+        response = close_gripper_client(srv_request)
+    except rospy.ServiceException as e:
+        rospy.logerr(f'Service call failed: {e}')
 
 def wait_for_dice_pose():
     dice_pose = rospy.wait_for_message(DICE_POSE_TOPIC, PoseStamped, timeout=None)
@@ -149,53 +122,44 @@ def main():
     goal_joints.append(-1.30) # Joint 6
     plan_and_execute_joint(goal_joints)
 
-    rospy.sleep(2)
-
     rospy.loginfo('Waiting for the dice pose...')
     dice_pose = wait_for_dice_pose()
     
     rospy.loginfo('Approaching the dice...')
     approach_pose = dice_pose
     approach_pose.position.z = approach_pose.position.z+0.3 #30 centimeters above the dice
-    plan_and_execute_pose(approach_pose, False)
 
-    rospy.sleep(2)
+    plan_and_execute_pose(approach_pose, False)
 
     rospy.loginfo('Opening gripper...')
     open_gripper()
 
     rospy.loginfo('Going down on the dice...')
     down_pose = Pose()
-    down_pose.position.z = 0.30 
+    down_pose.position.z = 0.20
     plan_and_execute_slerp(down_pose, True)
-
-    rospy.sleep(2)
 
     rospy.loginfo('Closing gripper...')
     close_gripper()
 
     rospy.loginfo('Going up...')
     up_pose = Pose()
-    up_pose.position.z = -0.30 
+    up_pose.position.z = -0.20 
     plan_and_execute_slerp(up_pose, True)
-
-    rospy.sleep(2)
 
     rospy.loginfo('Releasing the dice...')
     release_pose = Pose()
     release_pose.position.x = 0.05 
     release_pose.position.y = 0.05 
-    release_pose.position.z = 0.30
+    release_pose.position.z = 0.20
     plan_and_execute_slerp(release_pose, True)
 
     rospy.loginfo('Opening gripper...')
     open_gripper()
 
-    rospy.sleep(2)
-
     rospy.loginfo('Going up...')
     up_pose = Pose()
-    up_pose.position.z = -0.30 
+    up_pose.position.z = -0.20 
     plan_and_execute_slerp(up_pose, True)
 
 if __name__ == '__main__':
