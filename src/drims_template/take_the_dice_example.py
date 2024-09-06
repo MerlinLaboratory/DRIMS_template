@@ -29,12 +29,12 @@ CLOSE_GRIPPER_SERVICE_NAME          = '/close_gripper'
 def plan_and_execute_joint(joint_goal):
     rospy.loginfo(f'PLAN AND EXECUTE TO A JOINT CONFIGURATION')
     rospy.wait_for_service(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME)
-    plan_and_execute_joint = rospy.ServiceProxy(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME, PlanAndExecuteJoint)
+    plan_and_execute_join_client = rospy.ServiceProxy(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME, PlanAndExecuteJoint)
 
     srv_request = PlanAndExecuteJointRequest()
     srv_request.joint_goal = joint_goal
 
-    return plan_and_execute_joint(srv_request)
+    return plan_and_execute_join_client(srv_request)
     
     # try:
     #     response = plan_and_execute_joint(srv_request)
@@ -79,14 +79,14 @@ def plan_and_execute_pose(goal_pose, is_relative):
 def plan_and_execute_slerp(goal_pose, is_relative):
     rospy.loginfo(f'PLAN AND EXECUTE TO A CARTESIAN POSE WITH CARTESIAN TRAJECTORY. IS A RELATIVE MOVE: {is_relative}')
     rospy.wait_for_service(PLAN_AND_EXECUTE_SLERP_SERVICE_NAME)
-    plan_and_execute_slerp = rospy.ServiceProxy(PLAN_AND_EXECUTE_SLERP_SERVICE_NAME, PlanAndExecuteSlerp)
+    plan_and_execute_slerp_client = rospy.ServiceProxy(PLAN_AND_EXECUTE_SLERP_SERVICE_NAME, PlanAndExecuteSlerp)
 
     srv_request = PlanAndExecuteSlerpRequest()
     srv_request.goal_pose = goal_pose
     srv_request.is_relative = is_relative
 
 
-    return plan_and_execute_slerp(srv_request)
+    return plan_and_execute_slerp_client(srv_request)
     
     # try:
     #     response = plan_and_execute_slerp(srv_request)
@@ -104,12 +104,12 @@ def plan_and_execute_slerp(goal_pose, is_relative):
 def open_gripper():
     rospy.loginfo(f'OPEN GRIPPER')
     rospy.wait_for_service(OPEN_GRIPPER_SERVICE_NAME)
-    open_gripper = rospy.ServiceProxy(OPEN_GRIPPER_SERVICE_NAME, OpenGripper)
+    open_gripper_client = rospy.ServiceProxy(OPEN_GRIPPER_SERVICE_NAME, OpenGripper)
 
     srv_request = OpenGripperRequest()
     srv_request.in_flag = True
 
-    return open_gripper(srv_request)
+    return open_gripper_client(srv_request)
 
     # try:
     #     response = open_gripper(srv_request)
@@ -119,12 +119,12 @@ def open_gripper():
 def close_gripper():
     rospy.loginfo(f'CLOSE GRIPPER')
     rospy.wait_for_service(CLOSE_GRIPPER_SERVICE_NAME)
-    close_gripper = rospy.ServiceProxy(CLOSE_GRIPPER_SERVICE_NAME, CloseGripper)
+    close_gripper_client = rospy.ServiceProxy(CLOSE_GRIPPER_SERVICE_NAME, CloseGripper)
 
     srv_request = CloseGripperRequest()
     srv_request.in_flag = True
 
-    return close_gripper(srv_request)
+    return close_gripper_client(srv_request)
 
     # try:
     #     response = close_gripper(srv_request)
