@@ -48,7 +48,7 @@ ATTENTION: remember to press 'next' in the RvizVisualToolsGui window to execute 
 
 Both of the example programs present a basic use of the services to move the robot:
 - `/plan_and_execute_pose`: plan a collision-free joint trajectory to a given goal Cartesian pose and execute it.
-- `/plan_and_execute_slerp`: plan a collision-free joint trajectory by usign SLERP interpolation to a given a goal Cartesian pose and execute it.
+- `/plan_and_execute_slerp`: plan a collision-free joint trajectory by using SLERP interpolation to a given a goal Cartesian pose and execute it.
 - `/plan_and_execute_joint`: plan a collision-free joint trajectory to a given a Joint goal and execute it.
 - `/open_gripper`: open the gripper.
 - `/close_gripper`: close the gripper.
