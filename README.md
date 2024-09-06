@@ -43,8 +43,6 @@ for the **Python** version and,
 roslaunch DRIMS_template test_example.launch
 ```
 
-for the **C++** version.
-
 For the **C++** version, a template to help starting is provided (`src/task_dice.cpp`).
 
 Both of the example programs present a basic use of the services to move the robot:
