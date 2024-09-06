@@ -94,5 +94,16 @@ bool in_flag
 bool out_flag
 string message
 ```
+## Dice manipulation task
+
+Now, you can start to create your own task for dice manipulation.
+
+For the **C++** version, you can modify this ROS node (`task_dice.cpp`)between lines 154-164 to create your sequence of actions to perform the dice manipulation
+Remember that you can launch the previous ROS node by using the following command:
+```bash
+roslaunch drims_template task_dice.launch
+```
+
+
 
 
