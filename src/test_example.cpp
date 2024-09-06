@@ -60,6 +60,12 @@ void dicePoseCallback(const geometry_msgs::PoseStamped::ConstPtr &msg)
 // Function to apply rotation offset
 geometry_msgs::Pose applyRotationOffset(const geometry_msgs::Pose &pose, double angle_degrees, const Eigen::Vector3d &axis)
 {
+   /**
+    * @brief This function returns a geometry_msgs::Pose by applying a rotation along (X,Y, or Z axis in degree)
+    * @param pose [in] The input geometry_msgs::Pose.
+    * @param angle_degrees [in] The input angle degree.
+    * @param axis [in] The axis w.r.t to apply the rotation.
+    */
    double angle_radians = angle_degrees * M_PI / 180.0;
    Eigen::AngleAxisd rotation(angle_radians, axis); //   axis = Eigen::Vector3d::UnitX() or Eigen::Vector3d::UnitY() or Eigen::Vector3d::UnitZ()
    Eigen::Affine3d offset_eigen = Eigen::Affine3d::Identity();
@@ -81,6 +87,11 @@ geometry_msgs::Pose applyRotationOffset(const geometry_msgs::Pose &pose, double 
 
 geometry_msgs::Pose applyDisplacementOffset(const geometry_msgs::Pose &pose, const Eigen::Vector3d &displacement)
 {
+   /**
+    * @brief This function returns a geometry_msgs::Pose by applying a displacement along (X,Y, or Z axis in meters)
+    * @param pose [in] The input geometry_msgs::Pose.
+    * @param displacement [in] The axis w.r.t to apply the displacement
+    */
    // Create an Eigen Affine3d transformation for the displacement
    Eigen::Affine3d offset_eigen = Eigen::Affine3d::Identity();
    offset_eigen.translate(displacement);
@@ -158,18 +169,18 @@ int main(int argc, char **argv)
 
    // Add the displacement along z-axis of the grasp_dice_pose: 6 cm above the grasp_dice_pose
    geometry_msgs::Pose pre_grasp_pose = applyDisplacementOffset(grasp_dice_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
-   
+
    // open Gripper
    bool success = call_open_gripper(true);
    // Approach to pre_grasp_pose
    success = call_plan_and_execute_pose(pre_grasp_pose, false);
-   
+
    // Go into Grasp Pose
    success = call_plan_and_execute_slerp(grasp_dice_pose, false);
-   
+
    // Close the gripper
    success = call_close_gripper(true);
-   
+
    // Relative offset of 6 cm in order to plan from the current state of the robot
    geometry_msgs::Pose empty_pose;
    geometry_msgs::Pose displacement_pose = applyDisplacementOffset(empty_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
@@ -187,7 +198,17 @@ int main(int argc, char **argv)
 }
 
 bool call_plan_and_execute_pose(geometry_msgs::Pose goal_pose, bool is_relative)
-{
+{ /**
+   * @brief This functions implements a trajectory planning from the current state of the robot or from the last point of the previous past trajectory toward a specified target Cartesian goal.
+   *
+   *
+   * @param goal_pose [in] The Cartesian target goal you want to plan toward.
+   * @param is_goal_relative [in] Set True if you want to plan towards a relative goal_pose (previous input)that is relative.
+   *                              Example: You want to move the robot w.r.t the current pose of the robot.
+   *                              Set False if you want to plan towards an absolute goal_pose (previous input) w.r.t the fixed frame of the robot.
+   *                              Example: You want to move the robot from the current_pose toward a absolute global pose.
+   */
+
    abb_wrapper_msgs::plan_and_execute_pose plan_and_execute_pose_srv;
    plan_and_execute_pose_srv.request.goal_pose = goal_pose;
    plan_and_execute_pose_srv.request.is_relative = is_relative;
@@ -206,6 +227,16 @@ bool call_plan_and_execute_pose(geometry_msgs::Pose goal_pose, bool is_relative)
 
 bool call_plan_and_execute_slerp(geometry_msgs::Pose goal_pose, bool is_relative)
 {
+   /**
+    * @brief This functions implements a trajectory planning from the current state of the robot or from the last point of the previous past trajectory toward a specified target Cartesian goal by using SLERP interpolation.
+    *
+    *
+    * @param goal_pose [in] The Cartesian target goal you want to plan toward.
+    * @param is_goal_relative [in] Set True if you want to plan towards a relative goal_pose (previous input)that is relative.
+    *                              Example: You want to move the robot w.r.t the current pose of the robot.
+    *                              Set False if you want to plan towards an absolute goal_pose (previous input) w.r.t the fixed frame of the robot.
+    *                              Example: You want to move the robot from the current_pose toward a absolute global pose.
+    */
    abb_wrapper_msgs::plan_and_execute_slerp plan_and_execute_slerp_srv;
    plan_and_execute_slerp_srv.request.goal_pose = goal_pose;
    plan_and_execute_slerp_srv.request.is_relative = is_relative;
@@ -224,6 +255,11 @@ bool call_plan_and_execute_slerp(geometry_msgs::Pose goal_pose, bool is_relative
 
 bool call_plan_and_execute_joint(std::vector<double> joint_goal)
 {
+   /**
+    * @brief This functions implements a trajectory planning from the current state of the robot or from the last point of the previous past trajectory toward a joint position goal.
+    *
+    * @param joint_goal [in] The joint position goal you want to plan toward.
+    */
    abb_wrapper_msgs::plan_and_execute_joint plan_and_execute_joint_srv;
    plan_and_execute_joint_srv.request.joint_goal = joint_goal;
 
@@ -241,6 +277,11 @@ bool call_plan_and_execute_joint(std::vector<double> joint_goal)
 
 bool call_open_gripper(bool in_flag)
 {
+   /**
+    * @brief This functions implements the opening of the gripper
+    *
+    * @param in_flag [in] Set to true.
+    */
    abb_wrapper_msgs::open_gripper open_gripper_srv;
    open_gripper_srv.request.in_flag = in_flag;
 
@@ -260,6 +301,11 @@ bool call_open_gripper(bool in_flag)
 
 bool call_close_gripper(bool in_flag)
 {
+   /**
+    * @brief This functions implements the closing of the gripper
+    *
+    * @param in_flag [in] Set to true.
+    */
    abb_wrapper_msgs::close_gripper close_gripper_srv;
    close_gripper_srv.request.in_flag = in_flag;
 
