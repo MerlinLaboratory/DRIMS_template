@@ -27,6 +27,7 @@ OPEN_GRIPPER_SERVICE_NAME           = '/open_gripper'
 CLOSE_GRIPPER_SERVICE_NAME          = '/close_gripper'
 
 def plan_and_execute_joint(joint_goal):
+    rospy.loginfo(f'PLAN AND EXECUTE TO A JOINT CONFIGURATION')
     rospy.wait_for_service(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME)
     plan_and_execute_joint = rospy.ServiceProxy(PLAN_AND_EXECUTE_JOINT_SERVICE_NAME, PlanAndExecuteJoint)
 
@@ -46,6 +47,7 @@ def plan_and_execute_joint(joint_goal):
     return response.success
 
 def plan_and_execute_pose(goal_pose, is_relative):
+    rospy.loginfo(f'PLAN AND EXECUTE TO A CARTESIAN POSE WITH JOINT TRAJECTORY. IS A RELATIVE MOVE: {is_relative}')
     rospy.loginfo(f'Waiting {PLAN_AND_EXECUTE_POSE_SERVICE_NAME}')
 
     # Create a client of the service
@@ -71,6 +73,7 @@ def plan_and_execute_pose(goal_pose, is_relative):
 
 
 def plan_and_execute_slerp(goal_pose, is_relative):
+    rospy.loginfo(f'PLAN AND EXECUTE TO A CARTESIAN POSE WITH CARTESIAN TRAJECTORY. IS A RELATIVE MOVE: {is_relative}')
     rospy.wait_for_service(PLAN_AND_EXECUTE_SLERP_SERVICE_NAME)
     plan_and_execute_slerp = rospy.ServiceProxy(PLAN_AND_EXECUTE_SLERP_SERVICE_NAME, PlanAndExecuteSlerp)
 
@@ -92,6 +95,7 @@ def plan_and_execute_slerp(goal_pose, is_relative):
 
 
 def open_gripper():
+    rospy.loginfo(f'OPEN GRIPPER')
     rospy.wait_for_service(OPEN_GRIPPER_SERVICE_NAME)
     open_gripper = rospy.ServiceProxy(OPEN_GRIPPER_SERVICE_NAME, OpenGripper)
 
@@ -104,6 +108,7 @@ def open_gripper():
         rospy.logerr(f'Service call failed: {e}')
 
 def close_gripper():
+    rospy.loginfo(f'CLOSE GRIPPER')
     rospy.wait_for_service(CLOSE_GRIPPER_SERVICE_NAME)
     close_gripper = rospy.ServiceProxy(CLOSE_GRIPPER_SERVICE_NAME, CloseGripper)
 
