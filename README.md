@@ -41,7 +41,7 @@ Instead, for the **C++** version:
 ```bash
 roslaunch drims_template test_example.launch
 ```
-This launcher runs the script "test_example.cpp" located in the `DRIMS_template` ROS package.
+This launcher runs the script `test_example.cpp` located in the `DRIMS_template` ROS package.
 
 ATTENTION: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
 (Check the terminal where you launched the `launchControlServer.launch` to visualize the previous blue message)
@@ -98,7 +98,7 @@ string message
 
 Now, you can start to create your own task for dice manipulation.
 
-For the **C++** version, you can modify this ROS node (`task_dice.cpp`)between lines 154-164 to create your sequence of actions to perform the dice manipulation
+For the **C++** version, you can modify this ROS node (`task_dice.cpp`) between lines 154-164 to create your sequence of actions to perform the dice manipulation.
 Remember that you can launch the previous ROS node by using the following command:
 ```bash
 roslaunch drims_template task_dice.launch
