@@ -8,7 +8,6 @@ In order to run the simulation:
 ```bash
 roslaunch drims_dice_demo arm_gazebo.launch robot:=yumi # or robot:=gofa
 ```
-
 2. Launch low level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
@@ -25,6 +24,45 @@ roslaunch drims_dice_demo spawn_dice.launch
 ```
 
 **NOTE:** Each command should run in its own terminal
+
+## Real robot experiments
+
+**To use the real robot ask a tutor.**
+
+Steps to use the real robot (both Yumi or Gofa):
+- You need an Ubuntu machine
+- Connect your notebook using ethernet cable to the physical robot
+- Set your IP as Static IP: (`192.168.125.100`, Netmask: `255.255.255.00`, Empty gateway)
+- Test the connection with: `ping 192.168.125.1`.
+
+Now you are ready to work:
+1. Start the [docker](https://github.com/AIRLab-POLIMI/DRIMS2_Docker) :  `./start.sh`
+2. Compile and source the `drims_ws` workspace
+```bash
+cd drims_ws/
+catkin_make
+source devel/setup.bash
+```
+3. Launch the real robot:
+```bash
+roslaunch drims_dice_demo real_robot.launch robot:=yumi # or gofa
+```
+4. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch low level ROS Services Server for robot planning and control:
+```bash
+roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
+```
+
+6. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch high level ROS Services Server for robot planning and control:
+```bash
+roslaunch abb_wrapper_control launchTaskServer.launch
+```
+
+7. You can run this example:
+```bash
+rosrun drims_template take_the_dice_example.py
+```
+You have to publish a fake (or real) dice pose under `/dice_pose`. 
+
 
 ## Example nodes
 
@@ -103,6 +141,7 @@ Remember that you can launch the previous ROS node by using the following comman
 ```bash
 roslaunch drims_template task_dice.launch
 ```
+
 
 
 
