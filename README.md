@@ -61,7 +61,27 @@ roslaunch abb_wrapper_control launchTaskServer.launch
 ```bash
 rosrun drims_template take_the_dice_example.py
 ```
-You have to publish a fake (or real) dice pose under `/dice_pose`. 
+You have to publish a fake (or real) dice pose under `/dice_pose`, as an example:
+```bash
+rostopic pub /dice_pose geometry_msgs/PoseStamped -r 10 "
+header: 
+  seq: 630
+  stamp: 
+    secs: 146
+    nsecs: 840000000
+  frame_id: "yumi_base_link"
+pose: 
+  position: 
+    x: 0.0663425968666783
+    y: -0.318963996694468
+    z: 0.16700570241502155
+  orientation: 
+    x: 0.85544332495577
+    y: 0.5178958231656118
+    z: -0.0006812125851715791
+    w: 0.0004124144081274472"
+```
+. 
 
 
 ## Example nodes
