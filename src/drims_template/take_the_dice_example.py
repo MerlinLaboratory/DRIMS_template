@@ -114,12 +114,18 @@ def main():
     
     rospy.loginfo('Going to home...')
     goal_joints = []
-    goal_joints.append(0.0) # Joint 1
-    goal_joints.append(-0.4) # Joint 2
-    goal_joints.append(0.6) # Joint 3
-    goal_joints.append(0.0) # Joint 4
-    goal_joints.append(1.36) # Joint 5
-    goal_joints.append(-1.30) # Joint 6
+    if not rospy.has_param('/robot/name'):
+        rospy.logerr('No robot loaded')
+        return
+    
+    robot_name = rospy.get_param('/robot/name')
+    if robot_name == 'yumi_single_arm' or robot_name == 'yumi':
+        goal_joints = [-2.12, -0.1, 0.6, -0.04, 0.16, 1.6, -2.56]
+        # goal_joints = [-1.2, 0.18, -0.37, 0.01, 0.05, 1.4, -1.6]
+        # goal_joints = [0.178, 0.137, 0.0, 0.0, -0.1, 1.6, -1.28] # joints 1 to 7
+    else:
+        goal_joints = [0.0, -0.4, 0.6, 0.0, 1.36, -1.30] # joints 1 to 6
+    
     plan_and_execute_joint(goal_joints)
 
     rospy.loginfo('Waiting for the dice pose...')
