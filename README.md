@@ -49,6 +49,11 @@ source devel/setup.bash
 ```bash
 roslaunch drims_dice_demo real_robot.launch robot:=yumi # or gofa
 ```
+**⚠️ NOTE:** If you are using the Gofa robot, before launching the real robot, you must run the following command:
+
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+```
 4. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch low-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
