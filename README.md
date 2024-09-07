@@ -2,18 +2,18 @@
 
 ## Gazebo Simulation
 
-In order to run the simulation:
+To run the simulation:
 
 1. Load Gazebo environment and robot simulation:
 ```bash
 roslaunch drims_dice_demo arm_gazebo.launch robot:=yumi # or robot:=gofa
 ```
-2. Launch low level ROS Services Server for robot planning and control:
+2. Launch low-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
 ```
 
-3. Launch high level ROS Services Server for robot planning and control:
+3. Launch high-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchTaskServer.launch
 ```
@@ -31,7 +31,7 @@ roslaunch drims_dice_demo spawn_dice.launch
 
 Steps to use the real robot (both Yumi or Gofa):
 - You need an Ubuntu machine
-- Connect your notebook using ethernet cable to the physical robot
+- Connect your notebook to the physical robot via Ethernet
 - Set your IP as Static IP: (`192.168.125.100`, Netmask: `255.255.255.00`, Empty gateway)
 - Test the connection with: `ping 192.168.125.1`.
 
@@ -47,71 +47,49 @@ source devel/setup.bash
 ```bash
 roslaunch drims_dice_demo real_robot.launch robot:=yumi # or gofa
 ```
-4. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch low level ROS Services Server for robot planning and control:
+4. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch low-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
 ```
 
-6. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch high level ROS Services Server for robot planning and control:
+6. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch high-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchTaskServer.launch
 ```
 
-7. You can run this example:
-```bash
-rosrun drims_template take_the_dice_example.py
-```
-You have to publish a fake (or real) dice pose under `/dice_pose`, as an example:
-```bash
-rostopic pub /dice_pose geometry_msgs/PoseStamped -r 10 "
-header: 
-  seq: 630
-  stamp: 
-    secs: 146
-    nsecs: 840000000
-  frame_id: "yumi_base_link"
-pose: 
-  position: 
-    x: 0.0663425968666783
-    y: -0.318963996694468
-    z: 0.16700570241502155
-  orientation: 
-    x: 0.85544332495577
-    y: 0.5178958231656118
-    z: -0.0006812125851715791
-    w: 0.0004124144081274472"
-```
-. 
-
-
 ## Example nodes
 
-Two example nodes are provided in both Python and C++ to perform a simple grasp of the dice:
+You can test the functions with the following commands:
 
-For the **Python** version, launch the following ROS node:
+**Python:**
 
 ```bash
 rosrun drims_template take_the_dice_example.py
 ```
 
-Instead, for the **C++** version:
+**C++:**
 
 ```bash
 roslaunch drims_template test_example.launch
 ```
 This launcher runs the script `test_example.cpp` located in the `DRIMS_template` ROS package.
 
-ATTENTION: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
+**NOTE**: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
 (Check the terminal where you launched the `launchControlServer.launch` to visualize the previous blue message)
 
-Both of the example programs present a basic use of the services to move the robot:
+**NOTE 2**: the example assumes the dice localization is active. If you want to test the nodes with the real robots and without the vision, you can fake the dice localization with:
+```bash
+roslaunch drims_template test_spawn_dice.launch
+```
+
+Both the examples present a basic use of the services to move the robot:
 - `/plan_and_execute_pose`: plan a collision-free joint trajectory to a given goal Cartesian pose and execute it.
 - `/plan_and_execute_slerp`: plan a collision-free joint trajectory by using SLERP interpolation to a given a goal Cartesian pose and execute it.
 - `/plan_and_execute_joint`: plan a collision-free joint trajectory to a given a Joint goal and execute it.
 - `/open_gripper`: open the gripper.
 - `/close_gripper`: close the gripper.
 
-In the following description are reported the ROS service definition, located in the `srv` folder of `abb_wrapper_msgs` ROS package:
+The following gives the ROS service definition, located in the `srv` folder of `abb_wrapper_msgs` ROS package:
 
 **Service structure `abb_wrapper_msgs/plan_and_execute_pose`**
 ```
@@ -152,15 +130,15 @@ bool in_flag
 bool out_flag
 string message
 ```
-## Dice manipulation task
-
-Now, you can start to create your own task for dice manipulation.
-
-For the **C++** version, you can modify this ROS node (`task_dice.cpp`) between lines 154-164 to create your sequence of actions to perform the dice manipulation.
-Remember that you can launch the previous ROS node by using the following command:
-```bash
-roslaunch drims_template task_dice.launch
-```
+%## Dice manipulation task
+%
+%Now, you can start to create your own task for dice manipulation.%
+%
+%For the **C++** version, you can modify this ROS node (`task_dice.cpp`) between lines 154-164 to create your sequence of actions to perform the dice manipulation.
+%Remember that you can launch the previous ROS node by using the following command:
+%```bash
+%roslaunch drims_template task_dice.launch
+%```
 
 
 
