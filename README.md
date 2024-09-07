@@ -1,5 +1,7 @@
 # DRIMS2 Simulation Environment
 
+**Refer to this repo only for instructions (i.e. follow the README). The code might be outdated.**
+
 ## Gazebo Simulation
 
 To run the simulation:
