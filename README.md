@@ -2,7 +2,19 @@
 
 **Refer to this repo only for instructions (i.e. follow the README). The code might be outdated.**
 
+## First steps
+
+0. Update the docker repo `git pull DRIMS2_Docker`
+1. Start the [docker](https://github.com/AIRLab-POLIMI/DRIMS2_Docker) :  `./start.sh`
+2. Compile and source the `drims_ws` workspace
+```bash
+cd drims_ws/
+catkin_make
+source devel/setup.bash
+```
+
 ## Gazebo Simulation
+
 
 To run the simulation:
 
@@ -27,39 +39,33 @@ roslaunch drims_dice_demo spawn_dice.launch
 
 **NOTE:** Each command should run in its own terminal
 
-## Real robot experiments
+## Real robot
 
-**To use the real robot ask a tutor.**
+**⚠️ To use the real robot ask a tutor.**
 
 Steps to use the real robot (both Yumi or Gofa):
 - You need an Ubuntu machine
 - Connect your notebook to the physical robot via Ethernet
 - Set your IP as Static IP: (`192.168.125.100`, Netmask: `255.255.255.00`, Empty gateway)
-- Test the connection with: `ping 192.168.125.1`.
+- Test the connection with: `ping 192.168.125.1` (from outside Docker)
 
-Now you are ready to work:
-1. Start the [docker](https://github.com/AIRLab-POLIMI/DRIMS2_Docker) :  `./start.sh`
-2. Compile and source the `drims_ws` workspace
-```bash
-cd drims_ws/
-catkin_make
-source devel/setup.bash
-```
-3. Launch the real robot:
-```bash
-roslaunch drims_dice_demo real_robot.launch robot:=yumi # or gofa
-```
 **⚠️ NOTE:** If you are using the Gofa robot, before launching the real robot, you must run the following command:
-
 ```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
-4. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch low-level ROS Services Server for robot planning and control:
+
+Now you are ready to work:
+1. Launch the real robot:
+```bash
+roslaunch drims_dice_demo real_robot.launch robot:=yumi # or gofa
+```
+
+2. Open another terminal and connect to the docker `./connect.sh`, and launch low-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:=gofa
 ```
 
-6. Open another terminal and connect to the docker `./connect.sh`, and source again the `drims_ws` workspace, and launch high-level ROS Services Server for robot planning and control:
+3. Open another terminal and connect to the docker `./connect.sh`, and launch high-level ROS Services Server for robot planning and control:
 ```bash
 roslaunch abb_wrapper_control launchTaskServer.launch
 ```
@@ -97,6 +103,8 @@ Both the examples present a basic use of the services to move the robot:
 - `/close_gripper`: close the gripper.
 
 The following gives the ROS service definition, located in the `srv` folder of `abb_wrapper_msgs` ROS package:
+
+## Available ROS services to move the robot
 
 **Service structure `abb_wrapper_msgs/plan_and_execute_pose`**
 ```
