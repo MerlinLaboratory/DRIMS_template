@@ -130,6 +130,8 @@ bool in_flag
 bool out_flag
 string message
 ```
+
+<!--
 %## Dice manipulation task
 %
 %Now, you can start to create your own task for dice manipulation.%
@@ -139,7 +141,7 @@ string message
 %```bash
 %roslaunch drims_template task_dice.launch
 %```
-
+-->
 
 
 
