@@ -26,7 +26,7 @@ ros::ServiceClient open_gripper_client;
 geometry_msgs::Pose grasp_dice_pose;
 std_msgs::Int16 dice_value;
 int desired_dice_value;
-
+std::string robot;
 //
 ros::Subscriber dice_value_sub;
 ros::Subscriber dice_grasp_sub;
@@ -127,6 +127,16 @@ int main(int argc, char **argv)
 
    ROS_INFO("The desired dice value is: %d", desired_dice_value);
 
+   // Parse the robot you want to use (gofa or yumi)
+   if (nh_.getParam("/control_server_node/robot", robot))
+   {
+      ROS_INFO("The arm you want to use is: %s", robot.c_str());
+   }
+   else
+   {
+      ROS_ERROR("Failed to get '/control_server_node/robot' parameter.");
+   }
+
    // Create subscribers for dice_value and grasp_dice_pose
    dice_value_sub = nh_.subscribe("/dice_value", 1, dicevalueCallback);
    dice_grasp_sub = nh_.subscribe("/dice_pose", 1, dicePoseCallback);
@@ -164,6 +174,18 @@ int main(int argc, char **argv)
 
    /* GRASP DICE TASK*/
 
+   // Home Joint for Gofa (6 joint values)
+   std::vector<double> home_joints{-2.24, -0.17, 0.79, -0.11, 1.03, -0.48};
+
+   // Home Joint for YuMi (7 joint values)
+   if (robot == "yumi")
+   {
+      home_joints.push_back(0.0);
+   }
+
+   // Plan towards a Home Joint Goal
+   bool success = call_plan_and_execute_joint(home_joints);
+
    //
    ros::spinOnce();
 
@@ -171,9 +193,10 @@ int main(int argc, char **argv)
    geometry_msgs::Pose pre_grasp_pose = applyDisplacementOffset(grasp_dice_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
 
    // open Gripper
-   bool success = call_open_gripper(true);
+   success = call_open_gripper(true);
    // Approach to pre_grasp_pose
    success = call_plan_and_execute_pose(pre_grasp_pose, false);
+   //
 
    // Go into Grasp Pose
    success = call_plan_and_execute_slerp(grasp_dice_pose, false);
@@ -185,19 +208,19 @@ int main(int argc, char **argv)
    geometry_msgs::Pose empty_pose;
    geometry_msgs::Pose displacement_pose = applyDisplacementOffset(empty_pose, Eigen::Vector3d(0.0, 0.0, -0.06));
 
-   // Set true to plan w.r.t a relative offset
+   // Set true to plan w.r.t a relative offset (the boolean flag is set to true)
    success = call_plan_and_execute_slerp(displacement_pose, true);
 
    // Open Gripper
-
    success = call_open_gripper(true);
 
    // Rotate along X-axis of grasp link frame
-   geometry_msgs::Pose rotation_pose = applyRotationOffset(empty_pose, -30.0, Eigen::Vector3d::UnitX());
-   
+   geometry_msgs::Pose rotation_pose = applyRotationOffset(empty_pose, -18.0, Eigen::Vector3d::UnitX());
+
    //
-   success = call_plan_and_execute_pose(rotation_pose, true);
-   
+   success = call_plan_and_execute_slerp(rotation_pose, true);
+
+   //
    ros::waitForShutdown();
    spinner.stop();
    return 0;
