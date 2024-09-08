@@ -29,7 +29,7 @@ roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:
 
 3. Launch high-level ROS Services Server for robot planning and control:
 ```bash
-roslaunch abb_wrapper_control launchTaskServer.launch
+roslaunch abb_wrapper_control launchTaskServer.launch robot:=yumi # or robot:=gofa
 ```
 
 4. Spawn the dice in simulation:
