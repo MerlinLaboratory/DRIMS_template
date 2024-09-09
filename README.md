@@ -29,7 +29,7 @@ roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:
 
 3. Launch high-level ROS Services Server for robot planning and control:
 ```bash
-roslaunch abb_wrapper_control launchTaskServer.launch robot:=yumi # or robot:=gofa
+roslaunch abb_wrapper_control launchTaskServer.launch 
 ```
 
 4. Spawn the dice in simulation:
@@ -46,7 +46,7 @@ roslaunch drims_dice_demo spawn_dice.launch
 Steps to use the real robot (both Yumi or Gofa):
 - You need an Ubuntu machine
 - Connect your notebook to the physical robot via Ethernet
-- Set your IP as Static IP: (`192.168.125.100`, Netmask: `255.255.255.00`, Empty gateway)
+- Set your IP as Static IP: (`192.168.125.100`, Netmask: `255.255.255.0`, Empty gateway)
 - Test the connection with: `ping 192.168.125.1` (from outside Docker)
 
 **⚠️ NOTE:** If you are using the Gofa robot, before launching the real robot, you must run the following command:
