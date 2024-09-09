@@ -72,7 +72,7 @@ roslaunch abb_wrapper_control launchTaskServer.launch
 
 ## Example nodes
 
-You can test the functions with the following commands:
+You can test the functions with the following commands (Keep in mind the notes that are given below):
 
 **Python:**
 
@@ -87,10 +87,10 @@ roslaunch drims_template test_example.launch
 ```
 This launcher runs the script `test_example.cpp` located in the `DRIMS_template` ROS package.
 
-**NOTE**: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
+**⚠️ NOTE**: remember to press 'next' in the RvizVisualToolsGui window to execute the motion on the robot.
 (Check the terminal where you launched the `launchControlServer.launch` to visualize the previous blue message)
 
-**NOTE 2**: the example assumes the dice localization is active. If you want to test the nodes with the real robots and without the vision, you can fake the dice localization with:
+**⚠️ NOTE 2**: the example assumes the dice localization is active. If you want to test the nodes with the real robots and without the vision, you can fake the dice localization with:
 ```bash
 roslaunch drims_template test_spawn_dice.launch
 ```
