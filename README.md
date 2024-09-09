@@ -72,7 +72,7 @@ roslaunch abb_wrapper_control launchTaskServer.launch
 
 ## Example nodes
 
-You can test the functions with the following commands (**Keep in mind the notes that are given below**):
+You can test the functions with the following commands (⚠️**Keep in mind the notes that are given below**):
 
 **Python:**
 
