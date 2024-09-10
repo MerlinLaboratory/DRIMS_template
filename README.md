@@ -67,7 +67,7 @@ roslaunch abb_wrapper_control launchControlServer.launch robot:=yumi # or robot:
 
 3. Open another terminal and connect to the docker `./connect.sh`, and launch high-level ROS Services Server for robot planning and control:
 ```bash
-roslaunch abb_wrapper_control launchTaskServer.launch
+roslaunch abb_wrapper_control launchTaskServer.launch robot:=yumi # or robot:=gofa
 ```
 
 ## Example nodes
