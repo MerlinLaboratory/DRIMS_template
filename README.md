@@ -4,7 +4,7 @@
 
 ## First steps
 
-0. Update the docker repo `git pull DRIMS2_Docker`
+0. Update the docker repo `git pull DRIMS2_Docker` (**⚠️ Even you already cloned this repo, be sure to pull.**)
 1. Start the [docker](https://github.com/AIRLab-POLIMI/DRIMS2_Docker) :  `./start.sh`
 2. Compile and source the `drims_ws` workspace
 ```bash
