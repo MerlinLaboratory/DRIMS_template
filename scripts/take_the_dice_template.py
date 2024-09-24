@@ -112,61 +112,15 @@ def wait_for_dice_pose():
 def main():
     rospy.init_node('take_the_dice_example')
     
-    rospy.loginfo('Going to home...')
-    goal_joints = []
-    if not rospy.has_param('/control_server_node/robot'):
-        rospy.logerr('No robot loaded')
-        return
-    
-    robot_name = rospy.get_param('/control_server_node/robot')
-    if robot_name == 'yumi_single_arm' or robot_name == 'yumi':
-        goal_joints = [-2.12, -0.1, 0.6, -0.04, 0.16, 1.6, -2.56]
-        # goal_joints = [-1.2, 0.18, -0.37, 0.01, 0.05, 1.4, -1.6]
-        # goal_joints = [0.178, 0.137, 0.0, 0.0, -0.1, 1.6, -1.28] # joints 1 to 7
-    else:
-        goal_joints = [0.0, -0.4, 0.6, 0.0, 1.36, -1.30] # joints 1 to 6
-    
-    plan_and_execute_joint(goal_joints)
+    # ******************************
+    # **** Write here your code ****
+    # ******************************
 
-    rospy.loginfo('Waiting for the dice pose...')
-    dice_pose = wait_for_dice_pose()
-    
-    rospy.loginfo('Approaching the dice...')
-    approach_pose = dice_pose
-    approach_pose.position.z = approach_pose.position.z+0.3 #30 centimeters above the dice
 
-    plan_and_execute_pose(approach_pose, False)
 
-    rospy.loginfo('Opening gripper...')
-    open_gripper()
 
-    rospy.loginfo('Going down on the dice...')
-    down_pose = Pose()
-    down_pose.position.z = 0.20
-    plan_and_execute_slerp(down_pose, True)
+    # ******************************
 
-    rospy.loginfo('Closing gripper...')
-    close_gripper()
-
-    rospy.loginfo('Going up...')
-    up_pose = Pose()
-    up_pose.position.z = -0.20 
-    plan_and_execute_slerp(up_pose, True)
-
-    rospy.loginfo('Releasing the dice...')
-    release_pose = Pose()
-    release_pose.position.x = 0.05 
-    release_pose.position.y = 0.05 
-    release_pose.position.z = 0.20
-    plan_and_execute_slerp(release_pose, True)
-
-    rospy.loginfo('Opening gripper...')
-    open_gripper()
-
-    rospy.loginfo('Going up...')
-    up_pose = Pose()
-    up_pose.position.z = -0.20 
-    plan_and_execute_slerp(up_pose, True)
 
 if __name__ == '__main__':
     main()

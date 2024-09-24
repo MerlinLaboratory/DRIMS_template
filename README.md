@@ -1,7 +1,5 @@
 # DRIMS2 Simulation Environment
 
-**Refer to this repo only for instructions (i.e. follow the README). The code might be outdated.**
-
 ## First steps
 
 0. Update the docker repo `git pull DRIMS2_Docker` (**⚠️ Even you already cloned this repo, be sure to pull.**)

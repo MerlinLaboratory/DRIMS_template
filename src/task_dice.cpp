@@ -120,26 +120,35 @@ int main(int argc, char **argv)
 
    ROS_INFO("At the beginning of the task");
 
-   /* Task of dice manipulation:*/
-   /*Use the functions listed from lines 132 to 254 to create your own dice manipulation task*/
+   /* GRASP DICE TASK*/
+   std::vector<double>home_joints;
+   // Home Joint for GoFa (6 joint values)
+   if (robot == "gofa")
+   {
+      home_joints.assign({-1.98, 0.0, 0.51, -0.07, 0.94, 0.0});
+   }
 
+   // Home Joint for YuMi(7 joint values)
+   if (robot == "yumi")
+   {  
+      home_joints.assign({0.5778451033162864, -0.4259838682137797, 2.765560699257221, 0.40098920256651815, 0.2795610410838103, 0.8403600825003401, -1.0629680588027473});
+   }
 
-
-   /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-   */
+   // 1) Plan and go towards a HOME JOINTS goal
+   bool success = call_plan_and_execute_joint(home_joints);
+   
+   /* Task of MANIPULATION DICE*/
+   
+   /*Create your own task to manipulate the dice by using the functions listed below: 
+    _call_plan_and_execute_pose
+    _call_plan_and_execute_slerp
+    _call_plan_and_execute_joint
+    _call_open_gripper
+    _call_close_gripper
+     reported from line 155 to 277
+    */
+   
+   /**/
 
    ros::waitForShutdown();
    spinner.stop();
